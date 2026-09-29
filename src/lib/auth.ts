@@ -6,7 +6,7 @@ const SESSION_COOKIE_NAME = 'porashona_session';
 export const DEMO_USERS: Record<string, UserSession & { password: string }> = {
   'teacher@porashona.com': {
     id: 'teacher-1',
-    name: 'Sir Anwar Hossain',
+    name: 'Shuaib Mahmud',
     email: 'teacher@porashona.com',
     role: 'TEACHER',
     password: 'teacher123',

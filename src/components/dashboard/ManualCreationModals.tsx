@@ -552,7 +552,7 @@ export function AddNoteModal({
 
     dataStore.addNote({
       authorId: 'user-1',
-      authorName: noteType === 'TEACHER_NOTE' ? 'Sir Anwar Hossain (Teacher)' : 'Rahim Ahmed (Student)',
+      authorName: noteType === 'TEACHER_NOTE' ? 'Shuaib Mahmud (Teacher)' : 'Rahim Ahmed (Student)',
       authorRole: noteType === 'TEACHER_NOTE' ? 'TEACHER' : 'STUDENT',
       type: noteType,
       subjectId: matchedSub?.id || 'sub-1',

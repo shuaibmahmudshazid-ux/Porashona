@@ -216,7 +216,7 @@ export function DashboardLayout({
           <div className="min-w-0 pr-4">
             <div className="flex items-center gap-2">
               <h1 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white truncate">
-                Welcome back, Professor Anwar! 👋
+                Welcome back, Shuaib! 👋
               </h1>
               <span className="hidden lg:inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> All Systems Active
@@ -269,12 +269,12 @@ export function DashboardLayout({
             <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200/80 dark:border-slate-800">
               <div className="relative">
                 <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-bold text-xs flex items-center justify-center ring-2 ring-indigo-500/20 shadow-2xs">
-                  AH
+                  SM
                 </div>
                 <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
               </div>
               <div className="hidden lg:block text-left">
-                <div className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Sir Anwar Hossain</div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Shuaib Mahmud</div>
                 <div className="text-[10px] text-slate-400 font-medium">Head Academic Mentor</div>
               </div>
             </div>

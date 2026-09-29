@@ -130,7 +130,7 @@ export default function LoginPage() {
                   <Shield className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">Sir Anwar Hossain</div>
+                  <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">Shuaib Mahmud</div>
                   <div className="text-[10px] text-slate-400">Teacher / Admin Account</div>
                 </div>
               </div>

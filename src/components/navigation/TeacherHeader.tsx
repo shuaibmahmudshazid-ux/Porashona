@@ -43,10 +43,10 @@ export function TeacherHeader() {
         {/* User Profile */}
         <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200 dark:border-slate-800">
           <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 font-semibold text-xs flex items-center justify-center ring-2 ring-indigo-500/20">
-            AH
+            SM
           </div>
           <div className="hidden md:block">
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-100">Sir Anwar Hossain</div>
+            <div className="text-xs font-semibold text-slate-800 dark:text-slate-100">Shuaib Mahmud</div>
             <div className="text-[10px] text-slate-400">Head Mentor</div>
           </div>
           <button

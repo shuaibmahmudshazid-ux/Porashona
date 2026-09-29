@@ -36,7 +36,7 @@ export function SettingsModal({ isOpen, onClose, onDataReset }: SettingsModalPro
   // Settings form state
   const [appName, setAppName] = useState('StudyTrack');
   const [academicTerm, setAcademicTerm] = useState('2026-27');
-  const [mentorName, setMentorName] = useState('Sir Anwar Hossain');
+  const [mentorName, setMentorName] = useState('Shuaib Mahmud');
   const [dailyGoalHours, setDailyGoalHours] = useState('4.5');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -208,7 +208,7 @@ export function SettingsModal({ isOpen, onClose, onDataReset }: SettingsModalPro
               label="Head Mentor / Teacher Name"
               value={mentorName}
               onChange={(e) => setMentorName(e.target.value)}
-              placeholder="e.g. Sir Anwar Hossain"
+              placeholder="e.g. Shuaib Mahmud"
             />
             <Input
               label="Daily Study Goal (Hours)"

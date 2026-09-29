@@ -365,7 +365,7 @@ export default function StudentDashboard() {
               Summary Formula Sheet & Contradiction Proofs
             </h4>
             <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">
-              Sir Anwar Hossain shared steps for proving square root of 2 and 3 are irrational.
+              Shuaib Mahmud shared steps for proving square root of 2 and 3 are irrational.
             </p>
             <div className="mt-3">
               <Link href="/student/notes">
