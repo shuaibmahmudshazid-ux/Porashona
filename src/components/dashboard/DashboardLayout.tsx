@@ -194,7 +194,7 @@ export function DashboardLayout({
               <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-100 dark:ring-emerald-950" />
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-              Class 9 & 10 Secondary Cohort
+              Class 7 Academic Cohort • 10 Subjects
             </p>
           </div>
         </div>

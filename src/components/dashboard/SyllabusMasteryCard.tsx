@@ -39,10 +39,10 @@ export function SyllabusMasteryCard({
 
           <div>
             <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
-              Class 9 & 10 Cohort Progress
+              Class 7 Curriculum Progress
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-              Consolidated tracking across Core Mathematics, Physics, Chemistry, Biology, and English. On track to meet targeted mid-term syllabus cutoff by October 15.
+              Consolidated tracking across Bangla, English, Mathematics, Science, BGS, ICT, Physical Education, Work & Life, Agriculture/Home Science, and Religious Education.
             </p>
           </div>
 

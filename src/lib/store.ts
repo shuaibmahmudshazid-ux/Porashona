@@ -1,4 +1,6 @@
 import {
+  CLASS_7_DATA,
+  CLASS_7_SUBJECTS,
   INITIAL_CLASSES,
   INITIAL_SUBJECTS,
   INITIAL_CHAPTERS,
@@ -40,6 +42,44 @@ class AcademicDataStore {
   constructor() {
     if (typeof window !== 'undefined') {
       this.loadFromStorage();
+    } else {
+      this.ensureClass7();
+    }
+  }
+
+  private ensureClass7() {
+    let class7 = this.classes.find(
+      (c) => c.gradeLevel === 7 || c.name.toLowerCase().includes('class 7')
+    );
+
+    let changed = false;
+
+    if (!class7) {
+      class7 = { ...CLASS_7_DATA };
+      this.classes.push(class7);
+      changed = true;
+    }
+
+    const class7Id = class7.id;
+
+    CLASS_7_SUBJECTS.forEach((subTemplate) => {
+      const exists = this.subjects.some(
+        (s) => s.name.trim().toLowerCase() === subTemplate.name.trim().toLowerCase()
+      );
+      if (!exists) {
+        this.subjects.push({
+          ...subTemplate,
+          classId: class7Id,
+        });
+        changed = true;
+      }
+    });
+
+    // Update subjectCount
+    class7.subjectCount = this.subjects.filter((s) => s.classId === class7Id).length;
+
+    if (changed && typeof window !== 'undefined') {
+      this.saveToStorage();
     }
   }
 
@@ -79,8 +119,10 @@ class AcademicDataStore {
         this.notes = data.notes || [];
         this.assignments = data.assignments || [];
       }
+      this.ensureClass7();
     } catch (e) {
       console.error('Failed to load from storage', e);
+      this.ensureClass7();
     }
   }
 
