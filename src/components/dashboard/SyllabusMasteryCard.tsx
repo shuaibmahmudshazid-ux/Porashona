@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Award, BookCheck, Clock, RotateCcw, Sparkles } from 'lucide-react';
+import { Award, BookCheck, Clock, RotateCcw, Sparkles, TrendingUp, CheckCircle2 } from 'lucide-react';
 
 interface SyllabusMasteryCardProps {
   overallPercentage?: number;
@@ -19,106 +19,117 @@ export function SyllabusMasteryCard({
   totalHoursStudied = 142.5,
 }: SyllabusMasteryCardProps) {
   // SVG circular gauge math
-  const radius = 58;
+  const radius = 56;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (overallPercentage / 100) * circumference;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white p-6 sm:p-7 shadow-xl border border-indigo-800/50">
-      {/* Decorative ambient background blur */}
-      <div className="absolute -top-16 -right-16 w-56 h-56 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-6 sm:p-8 shadow-xl border border-slate-800/80">
+      {/* Decorative ambient background lighting */}
+      <div className="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        {/* Left side: description and metrics */}
-        <div className="space-y-4 max-w-sm text-center md:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-200 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>Academic Term 2026-27 Milestone</span>
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+        {/* Left Side: Context & Narrative */}
+        <div className="space-y-4 max-w-lg text-center lg:text-left">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/25 text-indigo-300 text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-indigo-300" />
+            <span>Academic Syllabus Mastery • Term 2026-27</span>
           </div>
 
           <div>
-            <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
-              Syllabus Completion
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
+              Class 9 & 10 Cohort Progress
             </h3>
-            <p className="text-xs text-indigo-200/80 mt-1 leading-relaxed">
-              Tracking across all secondary classes, units, and priority topics. Currently on pace for scheduled mid-term exams.
+            <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+              Consolidated tracking across Core Mathematics, Physics, Chemistry, Biology, and English. On track to meet targeted mid-term syllabus cutoff by October 15.
             </p>
           </div>
 
-          {/* Quick Stat Badges */}
-          <div className="grid grid-cols-2 gap-3 pt-1">
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-indigo-300 text-xs mb-1">
-                <BookCheck className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Mastered Topics</span>
+          {/* Quick Metrics Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1">
+            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+              <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
+                <BookCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span className="truncate">Topics Mastered</span>
               </div>
-              <div className="text-lg font-bold text-white">
-                {completedTopics} <span className="text-xs font-normal text-indigo-300">/ {totalTopics}</span>
+              <div className="text-lg font-bold text-white font-mono">
+                {completedTopics} <span className="text-xs font-normal text-slate-400 font-sans">/ {totalTopics}</span>
               </div>
             </div>
 
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-indigo-300 text-xs mb-1">
-                <Clock className="w-3.5 h-3.5 text-sky-400" />
-                <span>Total Study Time</span>
+            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+              <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
+                <Clock className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                <span className="truncate">Time Invested</span>
               </div>
-              <div className="text-lg font-bold text-white">
-                {totalHoursStudied} <span className="text-xs font-normal text-indigo-300">hrs</span>
+              <div className="text-lg font-bold text-white font-mono">
+                {totalHoursStudied} <span className="text-xs font-normal text-slate-400 font-sans">hrs</span>
+              </div>
+            </div>
+
+            <div className="col-span-2 sm:col-span-1 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+              <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
+                <TrendingUp className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="truncate">Pace Velocity</span>
+              </div>
+              <div className="text-lg font-bold text-emerald-400 font-mono">
+                +14.2% <span className="text-xs font-normal text-slate-400 font-sans">MoM</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right side: Circular Progress Gauge */}
+        {/* Right Side: Circular Radial Gauge & Spaced Revision Alert */}
         <div className="flex flex-col items-center justify-center shrink-0">
-          <div className="relative w-36 h-36 flex items-center justify-center">
+          <div className="relative w-40 h-40 flex items-center justify-center">
             <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 140 140">
-              {/* Track */}
+              {/* Subtle Outer Track */}
               <circle
                 cx="70"
                 cy="70"
                 r={radius}
                 className="text-slate-800"
-                strokeWidth="10"
+                strokeWidth="11"
                 stroke="currentColor"
                 fill="transparent"
               />
-              {/* Progress Bar */}
+              {/* Dynamic Gradient Bar */}
               <circle
                 cx="70"
                 cy="70"
                 r={radius}
-                className="text-indigo-400 transition-all duration-1000 ease-out"
-                strokeWidth="10"
+                className="transition-all duration-1000 ease-out"
+                strokeWidth="11"
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                stroke="url(#progressGradient)"
+                stroke="url(#masteryGradient)"
                 fill="transparent"
               />
               <defs>
-                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#818cf8" />
+                <linearGradient id="masteryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#6366f1" />
+                  <stop offset="50%" stopColor="#818cf8" />
                   <stop offset="100%" stopColor="#38bdf8" />
                 </linearGradient>
               </defs>
             </svg>
 
-            {/* Inner text */}
+            {/* Inner Content */}
             <div className="absolute flex flex-col items-center justify-center text-center">
-              <span className="text-3xl font-extrabold tracking-tight text-white">
+              <span className="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono tabular-nums">
                 {overallPercentage}%
               </span>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-300">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-0.5">
                 Completed
               </span>
             </div>
           </div>
 
-          <div className="mt-3 flex items-center gap-1.5 text-xs text-amber-300 bg-amber-950/60 px-3 py-1 rounded-full border border-amber-800/60">
-            <RotateCcw className="w-3 h-3 text-amber-400" />
-            <span>{revisionDueCount} topics ready for revision</span>
+          <div className="mt-4 flex items-center gap-2 text-xs text-amber-200 bg-amber-950/70 px-3.5 py-1.5 rounded-full border border-amber-800/80 shadow-xs">
+            <RotateCcw className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span className="font-semibold">{revisionDueCount} Topics Due for Spaced Revision</span>
           </div>
         </div>
       </div>

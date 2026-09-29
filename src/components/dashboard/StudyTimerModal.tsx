@@ -74,8 +74,9 @@ export function StudyTimerModal({
         {/* Header */}
         <div className="flex items-center gap-2 mb-4">
           <span
-            className="text-[11px] font-bold px-2.5 py-0.5 rounded-full text-white"
-            style={{ backgroundColor: task.subjectColor }}
+            className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+              task.badgeStyle || 'bg-indigo-500/20 text-indigo-200 border-indigo-400/30'
+            }`}
           >
             {task.subject}
           </span>

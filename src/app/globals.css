@@ -14,82 +14,67 @@
     --border: #e2e8f0;
     --input: #e2e8f0;
     
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
+    /* Academic Royal Iris Brand */
+    --primary: #4338ca;
+    --primary-hover: #3730a3;
     --primary-light: #eef2ff;
+    --primary-border: #c7d2fe;
     --primary-foreground: #ffffff;
     
-    --secondary: #0ea5e9;
-    --secondary-foreground: #ffffff;
-    
-    --accent: #8b5cf6;
-    --accent-light: #f5f3ff;
-    
-    --success: #10b981;
+    /* Harmonized Semantic Accents */
+    --success: #059669;
     --success-light: #ecfdf5;
+    --success-border: #a7f3d0;
     
-    --warning: #f59e0b;
+    --warning: #d97706;
     --warning-light: #fffbeb;
+    --warning-border: #fde68a;
     
-    --danger: #ef4444;
-    --danger-light: #fef2f2;
-  }
-
-  .dark {
-    --background: #090d16;
-    --foreground: #f8fafc;
+    --danger: #e11d48;
+    --danger-light: #fff1f2;
+    --danger-border: #fecdd3;
     
-    --card: #111827;
-    --card-foreground: #f8fafc;
-    
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    
-    --border: #1e293b;
-    --input: #1e293b;
-    
-    --primary: #6366f1;
-    --primary-hover: #818cf8;
-    --primary-light: #1e1b4b;
-    --primary-foreground: #ffffff;
-    
-    --secondary: #38bdf8;
-    --secondary-foreground: #090d16;
-    
-    --accent: #a78bfa;
-    --accent-light: #2e1065;
-    
-    --success: #34d399;
-    --success-light: #064e3b;
-    
-    --warning: #fbbf24;
-    --warning-light: #451a03;
-    
-    --danger: #f87171;
-    --danger-light: #450a0a;
+    --info: #0284c7;
+    --info-light: #f0f9ff;
+    --info-border: #bae6fd;
   }
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* Premium Card Shadows */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+}
+
+.card-shadow-hover {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-shadow-hover:hover {
+  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.06), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+  transform: translateY(-1px);
 }
 
 /* Glassmorphism helpers */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
-.dark .glass-panel {
-  background: rgba(17, 24, 39, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(30, 41, 59, 0.8);
+/* Subtle dot background pattern for section headers */
+.bg-grid-pattern {
+  background-image: radial-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
 }
 
 /* Custom scrollbars */
@@ -106,10 +91,4 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
-}
-.dark ::-webkit-scrollbar-thumb {
-  background: #334155;
-}
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
 }

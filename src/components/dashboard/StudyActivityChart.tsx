@@ -30,7 +30,7 @@ const WEEKLY_DATA: StudyActivityData[] = [
 
 export function StudyActivityChart() {
   const [mounted, setMounted] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<StudyActivityData | null>(WEEKLY_DATA[5]); // Default to Saturday
+  const [selectedDay, setSelectedDay] = useState<StudyActivityData | null>(WEEKLY_DATA[5]);
 
   useEffect(() => {
     setMounted(true);
@@ -42,7 +42,7 @@ export function StudyActivityChart() {
   if (!mounted) {
     return (
       <div className="h-64 flex items-center justify-center bg-slate-50/50 rounded-2xl animate-pulse">
-        <div className="text-xs text-slate-400">Loading activity metrics...</div>
+        <div className="text-xs text-slate-400 font-medium">Loading activity analytics...</div>
       </div>
     );
   }
@@ -51,24 +51,24 @@ export function StudyActivityChart() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold tracking-tight text-slate-900">
+          <div className="flex items-baseline gap-2.5">
+            <span className="text-3xl font-extrabold tracking-tight text-slate-900 font-mono tabular-nums">
               {totalWeeklyHours.toFixed(1)} hrs
             </span>
-            <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
               +14% vs last week
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Average: <span className="font-semibold text-slate-700">{avgDailyHours} hrs/day</span> across active students
+          <p className="text-xs text-slate-500 mt-1">
+            Cohort Average: <strong className="text-slate-700">{avgDailyHours} hrs/day</strong> across active students
           </p>
         </div>
 
         {selectedDay && (
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50/80 border border-indigo-100 text-xs">
-            <span className="font-semibold text-indigo-700">{selectedDay.day}:</span>
-            <span className="font-bold text-slate-800">{selectedDay.hours} hrs</span>
-            <span className="text-indigo-500">• {selectedDay.topicsCount} topics studied</span>
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50/70 border border-indigo-100 text-xs">
+            <span className="font-bold text-indigo-900">{selectedDay.day}:</span>
+            <span className="font-extrabold text-slate-900 font-mono">{selectedDay.hours} hrs</span>
+            <span className="text-indigo-600 font-medium">• {selectedDay.topicsCount} topics studied</span>
           </div>
         )}
       </div>
@@ -88,7 +88,7 @@ export function StudyActivityChart() {
               dataKey="day"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+              tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }}
               dy={6}
             />
             <YAxis
@@ -98,21 +98,21 @@ export function StudyActivityChart() {
               tickFormatter={(v) => `${v}h`}
             />
             <Tooltip
-              cursor={{ fill: 'rgba(99, 102, 241, 0.06)', radius: 8 }}
+              cursor={{ fill: 'rgba(67, 56, 202, 0.04)', radius: 8 }}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload as StudyActivityData;
                   return (
-                    <div className="rounded-xl bg-slate-900 text-white p-2.5 shadow-xl text-xs space-y-1 border border-slate-800">
-                      <div className="font-bold text-slate-200 flex justify-between gap-4">
-                        <span>{data.day} Study Log</span>
-                        <span className="text-indigo-400 font-mono">{data.hours} hrs</span>
+                    <div className="rounded-xl bg-slate-900 text-white p-3 shadow-xl text-xs space-y-1.5 border border-slate-800">
+                      <div className="font-bold text-slate-100 flex justify-between gap-6 pb-1 border-b border-slate-800">
+                        <span>{data.day} Study Session</span>
+                        <span className="text-indigo-300 font-mono font-bold">{data.hours} hrs</span>
                       </div>
                       <div className="text-[11px] text-slate-400 flex justify-between gap-4">
-                        <span>Daily Target:</span>
+                        <span>Target Goal:</span>
                         <span>{data.target} hrs</span>
                       </div>
-                      <div className="text-[11px] text-emerald-400 flex justify-between gap-4">
+                      <div className="text-[11px] text-emerald-400 flex justify-between gap-4 font-medium">
                         <span>Topics Mastered:</span>
                         <span>{data.topicsCount} topics</span>
                       </div>
@@ -122,7 +122,7 @@ export function StudyActivityChart() {
                 return null;
               }}
             />
-            <Bar dataKey="hours" radius={[8, 8, 4, 4]}>
+            <Bar dataKey="hours" radius={[6, 6, 2, 2]}>
               {WEEKLY_DATA.map((entry, index) => {
                 const isSelected = selectedDay?.day === entry.day;
                 const isAboveTarget = entry.hours >= entry.target;
@@ -132,12 +132,12 @@ export function StudyActivityChart() {
                     cursor="pointer"
                     fill={
                       isSelected
-                        ? '#4f46e5'
+                        ? '#3730a3' // Deep Iris Selected
                         : isAboveTarget
-                        ? '#6366f1'
-                        : '#cbd5e1'
+                        ? '#4f46e5' // Primary Iris
+                        : '#cbd5e1' // Neutral Slate Muted
                     }
-                    className="transition-all duration-300 hover:opacity-85"
+                    className="transition-all duration-200 hover:opacity-90"
                   />
                 );
               })}
@@ -146,16 +146,16 @@ export function StudyActivityChart() {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-3 border-t border-slate-100">
+        <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-indigo-600 inline-block" /> Target Achieved (≥4h)
+            <span className="w-2.5 h-2.5 rounded-sm bg-indigo-600 inline-block" /> Goal Achieved (≥4h)
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-sm bg-slate-300 inline-block" /> Below Target
           </span>
         </div>
-        <span className="text-slate-400">Click any day bar to inspect</span>
+        <span className="text-slate-400 font-medium">Click any day to inspect breakdown</span>
       </div>
     </div>
   );

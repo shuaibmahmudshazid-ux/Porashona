@@ -8,7 +8,6 @@ import {
   Dna,
   FlaskConical,
   ChevronRight,
-  Sparkles,
 } from 'lucide-react';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 
@@ -20,6 +19,9 @@ interface SubjectProgressItem {
   totalTopics: number;
   chaptersCount: number;
   color: string;
+  bgColor: string;
+  borderColor: string;
+  textColor: string;
   icon: React.ElementType;
 }
 
@@ -31,7 +33,10 @@ const SUBJECTS_DATA: SubjectProgressItem[] = [
     completedTopics: 28,
     totalTopics: 36,
     chaptersCount: 5,
-    color: '#4f46e5', // Indigo
+    color: '#4338ca', // Royal Iris
+    bgColor: 'bg-indigo-50',
+    borderColor: 'border-indigo-100',
+    textColor: 'text-indigo-700',
     icon: Calculator,
   },
   {
@@ -41,7 +46,10 @@ const SUBJECTS_DATA: SubjectProgressItem[] = [
     completedTopics: 31,
     totalTopics: 37,
     chaptersCount: 4,
-    color: '#10b981', // Emerald
+    color: '#059669', // Forest Jade
+    bgColor: 'bg-emerald-50',
+    borderColor: 'border-emerald-100',
+    textColor: 'text-emerald-700',
     icon: Dna,
   },
   {
@@ -51,7 +59,10 @@ const SUBJECTS_DATA: SubjectProgressItem[] = [
     completedTopics: 22,
     totalTopics: 34,
     chaptersCount: 4,
-    color: '#0ea5e9', // Sky
+    color: '#7e22ce', // Deep Mulberry
+    bgColor: 'bg-purple-50',
+    borderColor: 'border-purple-100',
+    textColor: 'text-purple-700',
     icon: BookOpen,
   },
   {
@@ -61,7 +72,10 @@ const SUBJECTS_DATA: SubjectProgressItem[] = [
     completedTopics: 18,
     totalTopics: 30,
     chaptersCount: 4,
-    color: '#f59e0b', // Amber
+    color: '#d97706', // Warm Amber
+    bgColor: 'bg-amber-50',
+    borderColor: 'border-amber-100',
+    textColor: 'text-amber-700',
     icon: FlaskConical,
   },
   {
@@ -71,7 +85,10 @@ const SUBJECTS_DATA: SubjectProgressItem[] = [
     completedTopics: 15,
     totalTopics: 29,
     chaptersCount: 4,
-    color: '#8b5cf6', // Violet
+    color: '#0284c7', // Steel Cyan
+    bgColor: 'bg-sky-50',
+    borderColor: 'border-sky-100',
+    textColor: 'text-sky-700',
     icon: Atom,
   },
 ];
@@ -79,45 +96,45 @@ const SUBJECTS_DATA: SubjectProgressItem[] = [
 export function SubjectProgressList() {
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 className="font-bold text-base text-slate-900 tracking-tight">Subject Progress</h3>
           <p className="text-xs text-slate-500">Class 9 & 10 Core Syllabus Tracks</p>
         </div>
-        <span className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer flex items-center gap-0.5">
-          View All <ChevronRight className="w-3.5 h-3.5" />
-        </span>
+        <button className="text-xs font-semibold text-indigo-700 hover:text-indigo-800 flex items-center gap-0.5 transition">
+          <span>Manage</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
       </div>
 
-      <div className="space-y-3.5">
+      <div className="space-y-3">
         {SUBJECTS_DATA.map((subject) => {
           const Icon = subject.icon;
           return (
             <div
               key={subject.id}
-              className="p-3.5 rounded-2xl border border-slate-200/80 bg-white hover:border-slate-300 hover:shadow-xs transition"
+              className="p-3.5 rounded-2xl border border-slate-200/80 bg-white hover:border-slate-300 shadow-2xs hover:shadow-xs transition"
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
                   <div
-                    className="w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0 shadow-xs"
-                    style={{ backgroundColor: subject.color }}
+                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${subject.bgColor} ${subject.borderColor} ${subject.textColor}`}
                   >
                     <Icon className="w-4 h-4" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-slate-900">{subject.name}</h4>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-slate-400 font-medium">
                       {subject.chaptersCount} Chapters • {subject.completedTopics}/{subject.totalTopics} Topics
                     </p>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-sm font-extrabold text-slate-900 font-mono">
+                  <span className="text-sm font-extrabold text-slate-900 font-mono tabular-nums">
                     {subject.percentage}%
                   </span>
-                  <span className="block text-[10px] text-slate-400">mastered</span>
+                  <span className="block text-[10px] text-slate-400 font-medium">mastered</span>
                 </div>
               </div>
 
