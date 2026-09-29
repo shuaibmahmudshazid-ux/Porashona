@@ -101,6 +101,7 @@ export interface TopicProgressData {
 
 export interface DailyStudyPlanItem {
   id: string;
+  studentId?: string;
   topicId: string;
   topicTitle: string;
   subjectName: string;

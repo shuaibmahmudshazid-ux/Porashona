@@ -2,148 +2,99 @@
 
 import React from 'react';
 import {
-  Calculator,
   BookOpen,
-  Atom,
-  Dna,
-  FlaskConical,
   ChevronRight,
+  Plus,
 } from 'lucide-react';
 import { ProgressBar } from '@/components/ui/ProgressBar';
+import { Button } from '@/components/ui/Button';
+import { SubjectData, TopicData } from '@/types';
 
-interface SubjectProgressItem {
-  id: string;
-  name: string;
-  percentage: number;
-  completedTopics: number;
-  totalTopics: number;
-  chaptersCount: number;
-  color: string;
-  bgColor: string;
-  borderColor: string;
-  textColor: string;
-  icon: React.ElementType;
+interface SubjectProgressListProps {
+  subjects: SubjectData[];
+  topics: TopicData[];
+  onAddSubject?: () => void;
 }
 
-const SUBJECTS_DATA: SubjectProgressItem[] = [
-  {
-    id: 'math',
-    name: 'Mathematics',
-    percentage: 78,
-    completedTopics: 28,
-    totalTopics: 36,
-    chaptersCount: 5,
-    color: '#4338ca', // Royal Iris
-    bgColor: 'bg-indigo-50',
-    borderColor: 'border-indigo-100',
-    textColor: 'text-indigo-700',
-    icon: Calculator,
-  },
-  {
-    id: 'bio',
-    name: 'Biology',
-    percentage: 84,
-    completedTopics: 31,
-    totalTopics: 37,
-    chaptersCount: 4,
-    color: '#059669', // Forest Jade
-    bgColor: 'bg-emerald-50',
-    borderColor: 'border-emerald-100',
-    textColor: 'text-emerald-700',
-    icon: Dna,
-  },
-  {
-    id: 'eng',
-    name: 'English',
-    percentage: 65,
-    completedTopics: 22,
-    totalTopics: 34,
-    chaptersCount: 4,
-    color: '#7e22ce', // Deep Mulberry
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-100',
-    textColor: 'text-purple-700',
-    icon: BookOpen,
-  },
-  {
-    id: 'chem',
-    name: 'Chemistry',
-    percentage: 60,
-    completedTopics: 18,
-    totalTopics: 30,
-    chaptersCount: 4,
-    color: '#d97706', // Warm Amber
-    bgColor: 'bg-amber-50',
-    borderColor: 'border-amber-100',
-    textColor: 'text-amber-700',
-    icon: FlaskConical,
-  },
-  {
-    id: 'phys',
-    name: 'Physics',
-    percentage: 52,
-    completedTopics: 15,
-    totalTopics: 29,
-    chaptersCount: 4,
-    color: '#0284c7', // Steel Cyan
-    bgColor: 'bg-sky-50',
-    borderColor: 'border-sky-100',
-    textColor: 'text-sky-700',
-    icon: Atom,
-  },
-];
-
-export function SubjectProgressList() {
+export function SubjectProgressList({
+  subjects = [],
+  topics = [],
+  onAddSubject,
+}: SubjectProgressListProps) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div>
-          <h3 className="font-bold text-base text-slate-900 tracking-tight">Subject Progress</h3>
-          <p className="text-xs text-slate-500">Class 9 & 10 Core Syllabus Tracks</p>
+          <h3 className="font-bold text-base text-slate-900 dark:text-white tracking-tight">Subject Progress</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {subjects.length} Subject{subjects.length !== 1 ? 's' : ''} Configured
+          </p>
         </div>
-        <button className="text-xs font-semibold text-indigo-700 hover:text-indigo-800 flex items-center gap-0.5 transition">
-          <span>Manage</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
+        {onAddSubject && (
+          <Button size="sm" variant="ghost" onClick={onAddSubject} className="text-xs text-indigo-700 dark:text-indigo-400 gap-1 px-2 h-7">
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add</span>
+          </Button>
+        )}
       </div>
 
-      <div className="space-y-3">
-        {SUBJECTS_DATA.map((subject) => {
-          const Icon = subject.icon;
-          return (
-            <div
-              key={subject.id}
-              className="p-3.5 rounded-2xl border border-slate-200/80 bg-white hover:border-slate-300 shadow-2xs hover:shadow-xs transition"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2.5">
-                  <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${subject.bgColor} ${subject.borderColor} ${subject.textColor}`}
-                  >
-                    <Icon className="w-4 h-4" />
+      {subjects.length === 0 ? (
+        <div className="py-10 px-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900/60 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-2">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <h4 className="text-xs font-bold text-slate-900 dark:text-white">No Subjects Added Yet</h4>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-[200px] mt-0.5 mb-3 leading-relaxed">
+            Create subjects such as Mathematics or English to start syllabus tracking.
+          </p>
+          {onAddSubject && (
+            <Button size="sm" onClick={onAddSubject} className="gap-1 text-xs h-8">
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Subject</span>
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {subjects.map((subject) => {
+            const subTopics = topics.filter((t) => t.subjectId === subject.id);
+            const percentage = 0; // Starts at zero
+
+            return (
+              <div
+                key={subject.id}
+                className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs hover:shadow-xs transition"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2.5">
+                    <div
+                      className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border border-black/10 dark:border-white/10 text-white font-bold text-xs"
+                      style={{ backgroundColor: subject.color }}
+                    >
+                      {subject.name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">{subject.name}</h4>
+                      <p className="text-[11px] text-slate-400 font-medium">
+                        {subject.chapterCount || 0} Chapters • 0/{subTopics.length} Topics
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900">{subject.name}</h4>
-                    <p className="text-[11px] text-slate-400 font-medium">
-                      {subject.chaptersCount} Chapters • {subject.completedTopics}/{subject.totalTopics} Topics
-                    </p>
+
+                  <div className="text-right">
+                    <span className="text-sm font-extrabold text-slate-900 dark:text-white font-mono tabular-nums">
+                      {percentage}%
+                    </span>
+                    <span className="block text-[10px] text-slate-400 font-medium">mastered</span>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <span className="text-sm font-extrabold text-slate-900 font-mono tabular-nums">
-                    {subject.percentage}%
-                  </span>
-                  <span className="block text-[10px] text-slate-400 font-medium">mastered</span>
-                </div>
+                <ProgressBar value={percentage} color={subject.color} size="sm" />
               </div>
-
-              {/* Progress bar */}
-              <ProgressBar value={subject.percentage} color={subject.color} size="sm" />
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

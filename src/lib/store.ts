@@ -17,12 +17,14 @@ import {
   StudentProfileData,
   TopicProgressData,
   DailyStudyPlanData,
+  DailyStudyPlanItem,
   NoteData,
   AssignmentData,
   TopicStatus,
 } from '@/types';
 
-// Global singleton in memory for client/server execution
+const STORAGE_KEY = 'studytrack_manual_store_v1';
+
 class AcademicDataStore {
   private classes: AcademicClassData[] = [...INITIAL_CLASSES];
   private subjects: SubjectData[] = [...INITIAL_SUBJECTS];
@@ -33,6 +35,81 @@ class AcademicDataStore {
   private dailyPlans: Record<string, DailyStudyPlanData> = { ...INITIAL_DAILY_PLANS };
   private notes: NoteData[] = [...INITIAL_NOTES];
   private assignments: AssignmentData[] = [...INITIAL_ASSIGNMENTS];
+  private listeners: (() => void)[] = [];
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      this.loadFromStorage();
+    }
+  }
+
+  private saveToStorage() {
+    if (typeof window === 'undefined') return;
+    try {
+      const data = {
+        classes: this.classes,
+        subjects: this.subjects,
+        chapters: this.chapters,
+        topics: this.topics,
+        students: this.students,
+        progress: this.progress,
+        dailyPlans: this.dailyPlans,
+        notes: this.notes,
+        assignments: this.assignments,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      this.notifyListeners();
+    } catch (e) {
+      console.error('Failed to save to storage', e);
+    }
+  }
+
+  private loadFromStorage() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        this.classes = data.classes || [];
+        this.subjects = data.subjects || [];
+        this.chapters = data.chapters || [];
+        this.topics = data.topics || [];
+        this.students = data.students || [];
+        this.progress = data.progress || [];
+        this.dailyPlans = data.dailyPlans || {};
+        this.notes = data.notes || [];
+        this.assignments = data.assignments || [];
+      }
+    } catch (e) {
+      console.error('Failed to load from storage', e);
+    }
+  }
+
+  subscribe(listener: () => void) {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
+  }
+
+  private notifyListeners() {
+    this.listeners.forEach((l) => l());
+  }
+
+  resetAll() {
+    this.classes = [];
+    this.subjects = [];
+    this.chapters = [];
+    this.topics = [];
+    this.students = [];
+    this.progress = [];
+    this.dailyPlans = {};
+    this.notes = [];
+    this.assignments = [];
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+    this.notifyListeners();
+  }
 
   // Classes
   getClasses(): AcademicClassData[] {
@@ -49,7 +126,25 @@ class AcademicDataStore {
       id: `class-${Date.now()}`,
     };
     this.classes.push(created);
+    this.saveToStorage();
     return created;
+  }
+
+  updateClass(id: string, updates: Partial<AcademicClassData>): AcademicClassData | null {
+    const idx = this.classes.findIndex((c) => c.id === id);
+    if (idx === -1) return null;
+    this.classes[idx] = { ...this.classes[idx], ...updates };
+    this.saveToStorage();
+    return this.classes[idx];
+  }
+
+  deleteClass(id: string) {
+    this.classes = this.classes.filter((c) => c.id !== id);
+    // Cascade delete subjects in that class
+    const removedSubjects = this.subjects.filter((s) => s.classId === id).map((s) => s.id);
+    this.subjects = this.subjects.filter((s) => s.classId !== id);
+    this.topics = this.topics.filter((t) => !removedSubjects.includes(t.subjectId));
+    this.saveToStorage();
   }
 
   // Subjects
@@ -68,7 +163,23 @@ class AcademicDataStore {
       id: `sub-${Date.now()}`,
     };
     this.subjects.push(created);
+    this.saveToStorage();
     return created;
+  }
+
+  updateSubject(id: string, updates: Partial<SubjectData>): SubjectData | null {
+    const idx = this.subjects.findIndex((s) => s.id === id);
+    if (idx === -1) return null;
+    this.subjects[idx] = { ...this.subjects[idx], ...updates };
+    this.saveToStorage();
+    return this.subjects[idx];
+  }
+
+  deleteSubject(id: string) {
+    this.subjects = this.subjects.filter((s) => s.id !== id);
+    this.chapters = this.chapters.filter((c) => c.subjectId !== id);
+    this.topics = this.topics.filter((t) => t.subjectId !== id);
+    this.saveToStorage();
   }
 
   // Chapters
@@ -86,7 +197,22 @@ class AcademicDataStore {
       id: `chap-${Date.now()}`,
     };
     this.chapters.push(created);
+    this.saveToStorage();
     return created;
+  }
+
+  updateChapter(id: string, updates: Partial<ChapterData>): ChapterData | null {
+    const idx = this.chapters.findIndex((c) => c.id === id);
+    if (idx === -1) return null;
+    this.chapters[idx] = { ...this.chapters[idx], ...updates };
+    this.saveToStorage();
+    return this.chapters[idx];
+  }
+
+  deleteChapter(id: string) {
+    this.chapters = this.chapters.filter((c) => c.id !== id);
+    this.topics = this.topics.filter((t) => t.chapterId !== id);
+    this.saveToStorage();
   }
 
   // Topics
@@ -107,7 +233,22 @@ class AcademicDataStore {
       id: `top-${Date.now()}`,
     };
     this.topics.push(created);
+    this.saveToStorage();
     return created;
+  }
+
+  updateTopic(id: string, updates: Partial<TopicData>): TopicData | null {
+    const idx = this.topics.findIndex((t) => t.id === id);
+    if (idx === -1) return null;
+    this.topics[idx] = { ...this.topics[idx], ...updates };
+    this.saveToStorage();
+    return this.topics[idx];
+  }
+
+  deleteTopic(id: string) {
+    this.topics = this.topics.filter((t) => t.id !== id);
+    this.progress = this.progress.filter((p) => p.topicId !== id);
+    this.saveToStorage();
   }
 
   // Students
@@ -126,19 +267,32 @@ class AcademicDataStore {
       createdAt: new Date().toISOString(),
     };
     this.students.push(created);
+    this.saveToStorage();
     return created;
   }
 
   updateStudent(id: string, updates: Partial<StudentProfileData>): StudentProfileData | null {
-    const index = this.students.findIndex((s) => s.id === id);
-    if (index === -1) return null;
-    this.students[index] = { ...this.students[index], ...updates };
-    return this.students[index];
+    const idx = this.students.findIndex((s) => s.id === id);
+    if (idx === -1) return null;
+    this.students[idx] = { ...this.students[idx], ...updates };
+    this.saveToStorage();
+    return this.students[idx];
+  }
+
+  deleteStudent(id: string) {
+    this.students = this.students.filter((s) => s.id !== id);
+    delete this.dailyPlans[id];
+    this.progress = this.progress.filter((p) => p.studentId !== id);
+    this.saveToStorage();
   }
 
   // Progress
   getProgressForStudent(studentId: string): TopicProgressData[] {
     return this.progress.filter((p) => p.studentId === studentId);
+  }
+
+  getAllProgress(): TopicProgressData[] {
+    return this.progress;
   }
 
   updateTopicProgress(
@@ -171,6 +325,7 @@ class AcademicDataStore {
         teacherFeedback: feedback !== undefined ? feedback : prev.teacherFeedback,
       };
       this.progress[existingIndex] = updated;
+      this.saveToStorage();
       return updated;
     } else {
       const created: TopicProgressData = {
@@ -187,6 +342,7 @@ class AcademicDataStore {
         teacherFeedback: feedback,
       };
       this.progress.push(created);
+      this.saveToStorage();
       return created;
     }
   }
@@ -198,23 +354,44 @@ class AcademicDataStore {
     if (existingIndex >= 0) {
       this.progress[existingIndex].totalStudyMinutes += durationMinutes;
       this.progress[existingIndex].lastStudiedAt = new Date().toISOString();
+      this.saveToStorage();
     }
   }
 
   // Daily Study Plans
   getDailyPlan(studentId: string): DailyStudyPlanData {
     if (!this.dailyPlans[studentId]) {
-      // Auto-generate a default plan for today
       this.dailyPlans[studentId] = {
         id: `plan-${Date.now()}`,
         studentId,
         planDate: new Date().toISOString().split('T')[0],
-        totalAllocatedMinutes: 120,
+        totalAllocatedMinutes: 0,
         items: [],
         isManuallyOverridden: false,
       };
     }
     return this.dailyPlans[studentId];
+  }
+
+  getTodayTasks(): DailyStudyPlanItem[] {
+    const allItems: DailyStudyPlanItem[] = [];
+    Object.values(this.dailyPlans).forEach((plan) => {
+      allItems.push(...plan.items);
+    });
+    return allItems;
+  }
+
+  addStudyPlanItem(studentId: string, item: Omit<DailyStudyPlanItem, 'id'>): DailyStudyPlanItem {
+    const plan = this.getDailyPlan(studentId);
+    const createdItem: DailyStudyPlanItem = {
+      ...item,
+      studentId,
+      id: `item-${Date.now()}`,
+    };
+    plan.items.push(createdItem);
+    plan.totalAllocatedMinutes += item.targetMinutes;
+    this.saveToStorage();
+    return createdItem;
   }
 
   updatePlanItemStatus(
@@ -231,19 +408,25 @@ class AcademicDataStore {
         item.actualMinutes += actualMinutesToAdd;
         this.recordStudyTime(studentId, item.topicId, actualMinutesToAdd);
       }
+      this.saveToStorage();
     }
   }
 
+  deleteStudyPlanItem(studentId: string, itemId: string) {
+    if (studentId && this.dailyPlans[studentId]) {
+      const plan = this.dailyPlans[studentId];
+      plan.items = plan.items.filter((i) => i.id !== itemId);
+    }
+    // Also remove from any plan containing this itemId for clean state
+    Object.values(this.dailyPlans).forEach((plan) => {
+      plan.items = plan.items.filter((i) => i.id !== itemId);
+    });
+    this.saveToStorage();
+  }
+
   // Notes
-  getNotes(filter?: { subjectId?: string; studentId?: string; type?: string }): NoteData[] {
-    let list = this.notes;
-    if (filter?.subjectId) {
-      list = list.filter((n) => n.subjectId === filter.subjectId);
-    }
-    if (filter?.type) {
-      list = list.filter((n) => n.type === filter.type);
-    }
-    return list;
+  getNotes(): NoteData[] {
+    return this.notes;
   }
 
   addNote(note: Omit<NoteData, 'id' | 'createdAt' | 'updatedAt'>): NoteData {
@@ -254,7 +437,21 @@ class AcademicDataStore {
       updatedAt: new Date().toISOString(),
     };
     this.notes.unshift(created);
+    this.saveToStorage();
     return created;
+  }
+
+  updateNote(id: string, updates: Partial<NoteData>): NoteData | null {
+    const idx = this.notes.findIndex((n) => n.id === id);
+    if (idx === -1) return null;
+    this.notes[idx] = { ...this.notes[idx], ...updates, updatedAt: new Date().toISOString() };
+    this.saveToStorage();
+    return this.notes[idx];
+  }
+
+  deleteNote(id: string) {
+    this.notes = this.notes.filter((n) => n.id !== id);
+    this.saveToStorage();
   }
 
   // Assignments
@@ -268,7 +465,55 @@ class AcademicDataStore {
       id: `assign-${Date.now()}`,
     };
     this.assignments.unshift(created);
+    this.saveToStorage();
     return created;
+  }
+
+  updateAssignment(id: string, updates: Partial<AssignmentData>): AssignmentData | null {
+    const idx = this.assignments.findIndex((a) => a.id === id);
+    if (idx === -1) return null;
+    this.assignments[idx] = { ...this.assignments[idx], ...updates };
+    this.saveToStorage();
+    return this.assignments[idx];
+  }
+
+  deleteAssignment(id: string) {
+    this.assignments = this.assignments.filter((a) => a.id !== id);
+    this.saveToStorage();
+  }
+
+  // Export / Import
+  exportAllJson(): string {
+    return JSON.stringify({
+      classes: this.classes,
+      subjects: this.subjects,
+      chapters: this.chapters,
+      topics: this.topics,
+      students: this.students,
+      progress: this.progress,
+      dailyPlans: this.dailyPlans,
+      notes: this.notes,
+      assignments: this.assignments,
+    }, null, 2);
+  }
+
+  importAllJson(jsonString: string): boolean {
+    try {
+      const data = JSON.parse(jsonString);
+      this.classes = data.classes || [];
+      this.subjects = data.subjects || [];
+      this.chapters = data.chapters || [];
+      this.topics = data.topics || [];
+      this.students = data.students || [];
+      this.progress = data.progress || [];
+      this.dailyPlans = data.dailyPlans || {};
+      this.notes = data.notes || [];
+      this.assignments = data.assignments || [];
+      this.saveToStorage();
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 

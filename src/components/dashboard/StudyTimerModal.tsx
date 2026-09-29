@@ -1,15 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, RotateCcw, CheckCircle2, X, Clock, Sparkles } from 'lucide-react';
+import { Play, Pause, CheckCircle2, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { TodayTaskItem } from './TodayStudyPlan';
+
+export interface StudySessionTask {
+  id: string;
+  subject: string;
+  badgeStyle?: string;
+  topic: string;
+  chapter: string;
+  plannedMinutes: number;
+  actualMinutes: number;
+  status?: string;
+  type?: string;
+}
 
 interface StudyTimerModalProps {
-  task: TodayTaskItem | null;
+  task: StudySessionTask | null;
   isOpen: boolean;
   onClose: () => void;
-  onSessionComplete: (task: TodayTaskItem, minutesStudied: number) => void;
+  onSessionComplete: (task: StudySessionTask, minutesStudied: number) => void;
 }
 
 export function StudyTimerModal({

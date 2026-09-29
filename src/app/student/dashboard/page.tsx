@@ -23,7 +23,20 @@ import { dataStore } from '@/lib/store';
 import { DailyStudyPlanItem } from '@/types';
 
 export default function StudentDashboard() {
-  const student = dataStore.getStudentById('std-001')!;
+  const student = dataStore.getStudentById('std-001') || {
+    id: 'std-001',
+    userId: 'user-1',
+    name: 'Student',
+    email: 'student@studytrack.com',
+    studentIdNumber: 'STD-001',
+    classId: 'class-1',
+    className: 'Class 9',
+    academicSession: '2026-2027',
+    schoolCollege: 'Academy',
+    guardian: { name: 'Guardian', relationship: 'Parent', phone: '' },
+    weeklySchedule: [],
+    enrolledSubjectIds: [],
+  };
   const plan = dataStore.getDailyPlan('std-001');
   const [items, setItems] = useState<DailyStudyPlanItem[]>(plan.items);
 

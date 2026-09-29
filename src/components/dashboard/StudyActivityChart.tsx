@@ -18,25 +18,31 @@ interface StudyActivityData {
   topicsCount: number;
 }
 
-const WEEKLY_DATA: StudyActivityData[] = [
-  { day: 'Mon', hours: 4.5, target: 4.0, topicsCount: 3 },
-  { day: 'Tue', hours: 5.2, target: 4.0, topicsCount: 4 },
-  { day: 'Wed', hours: 3.8, target: 4.0, topicsCount: 2 },
-  { day: 'Thu', hours: 6.0, target: 4.0, topicsCount: 5 },
-  { day: 'Fri', hours: 4.2, target: 4.0, topicsCount: 3 },
-  { day: 'Sat', hours: 7.5, target: 5.0, topicsCount: 6 },
-  { day: 'Sun', hours: 5.8, target: 5.0, topicsCount: 4 },
-];
+interface StudyActivityChartProps {
+  loggedHours?: number;
+}
 
-export function StudyActivityChart() {
+export function StudyActivityChart({ loggedHours = 0 }: StudyActivityChartProps) {
   const [mounted, setMounted] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<StudyActivityData | null>(WEEKLY_DATA[5]);
+
+  // When loggedHours is 0, chart shows 0 across the days
+  const weeklyData: StudyActivityData[] = [
+    { day: 'Mon', hours: 0, target: 4.0, topicsCount: 0 },
+    { day: 'Tue', hours: 0, target: 4.0, topicsCount: 0 },
+    { day: 'Wed', hours: 0, target: 4.0, topicsCount: 0 },
+    { day: 'Thu', hours: 0, target: 4.0, topicsCount: 0 },
+    { day: 'Fri', hours: 0, target: 4.0, topicsCount: 0 },
+    { day: 'Sat', hours: loggedHours, target: 5.0, topicsCount: loggedHours > 0 ? 1 : 0 },
+    { day: 'Sun', hours: 0, target: 5.0, topicsCount: 0 },
+  ];
+
+  const [selectedDay, setSelectedDay] = useState<StudyActivityData | null>(weeklyData[5]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const totalWeeklyHours = WEEKLY_DATA.reduce((acc, curr) => acc + curr.hours, 0);
+  const totalWeeklyHours = loggedHours;
   const avgDailyHours = (totalWeeklyHours / 7).toFixed(1);
 
   if (!mounted) {
@@ -55,12 +61,12 @@ export function StudyActivityChart() {
             <span className="text-3xl font-extrabold tracking-tight text-slate-900 font-mono tabular-nums">
               {totalWeeklyHours.toFixed(1)} hrs
             </span>
-            <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-              +14% vs last week
+            <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+              {totalWeeklyHours > 0 ? '+100% initial session' : '0 hrs this week'}
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Cohort Average: <strong className="text-slate-700">{avgDailyHours} hrs/day</strong> across active students
+            Cohort Average: <strong className="text-slate-700">{avgDailyHours} hrs/day</strong> • Start study sessions to track daily activity
           </p>
         </div>
 
@@ -76,7 +82,7 @@ export function StudyActivityChart() {
       <div className="h-56 w-full pt-2">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={WEEKLY_DATA}
+            data={weeklyData}
             margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
             onClick={(state: any) => {
               if (state && state.activePayload && state.activePayload.length > 0) {
@@ -94,6 +100,7 @@ export function StudyActivityChart() {
             <YAxis
               axisLine={false}
               tickLine={false}
+              domain={[0, Math.max(6, Math.ceil(loggedHours + 2))]}
               tick={{ fill: '#94a3b8', fontSize: 11 }}
               tickFormatter={(v) => `${v}h`}
             />
@@ -109,7 +116,7 @@ export function StudyActivityChart() {
                         <span className="text-indigo-300 font-mono font-bold">{data.hours} hrs</span>
                       </div>
                       <div className="text-[11px] text-slate-400 flex justify-between gap-4">
-                        <span>Target Goal:</span>
+                        <span>Daily Target:</span>
                         <span>{data.target} hrs</span>
                       </div>
                       <div className="text-[11px] text-emerald-400 flex justify-between gap-4 font-medium">
@@ -123,7 +130,7 @@ export function StudyActivityChart() {
               }}
             />
             <Bar dataKey="hours" radius={[6, 6, 2, 2]}>
-              {WEEKLY_DATA.map((entry, index) => {
+              {weeklyData.map((entry, index) => {
                 const isSelected = selectedDay?.day === entry.day;
                 const isAboveTarget = entry.hours >= entry.target;
                 return (
@@ -131,11 +138,13 @@ export function StudyActivityChart() {
                     key={`cell-${index}`}
                     cursor="pointer"
                     fill={
-                      isSelected
-                        ? '#3730a3' // Deep Iris Selected
-                        : isAboveTarget
-                        ? '#4f46e5' // Primary Iris
-                        : '#cbd5e1' // Neutral Slate Muted
+                      isSelected && entry.hours > 0
+                        ? '#3730a3'
+                        : isAboveTarget && entry.hours > 0
+                        ? '#4f46e5'
+                        : entry.hours > 0
+                        ? '#6366f1'
+                        : '#e2e8f0'
                     }
                     className="transition-all duration-200 hover:opacity-90"
                   />
@@ -152,10 +161,10 @@ export function StudyActivityChart() {
             <span className="w-2.5 h-2.5 rounded-sm bg-indigo-600 inline-block" /> Goal Achieved (≥4h)
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-slate-300 inline-block" /> Below Target
+            <span className="w-2.5 h-2.5 rounded-sm bg-slate-200 inline-block" /> No Activity / 0h
           </span>
         </div>
-        <span className="text-slate-400 font-medium">Click any day to inspect breakdown</span>
+        <span className="text-slate-400 font-medium">Click any day to inspect</span>
       </div>
     </div>
   );
